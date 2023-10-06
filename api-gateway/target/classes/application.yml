@@ -1,0 +1,44 @@
+server:
+  port: 9191
+
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: ARTICLE-SERVICE
+          uri: lb://ARTICLE-SERVICE
+          predicates:
+            - Path=/api/article/**
+          filters:
+          - AuthenticationFilter
+
+        - id: VERSION-TRACKING-SERVICE
+          uri: lb://VERSION-TRACKING-SERVICE
+          predicates:
+            - Path=/api/version/**
+        - id: WORKFLOW-SERVICE
+          uri: lb://WORKFLOW-SERVICE
+          predicates:
+            - Path=/workflow/**
+          filters:
+            - AuthenticationFilter
+        - id: USER-SERVICE
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user/**
+          filters:
+          - AuthenticationFilter
+            
+        - id: identity-service
+          uri: lb://IDENTITY-SERVICE
+          predicates:
+            - Path=/auth/**
+          filters:
+          - AuthenticationFilter
+

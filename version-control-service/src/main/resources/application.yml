@@ -1,0 +1,38 @@
+server:
+  port: 1111
+spring:
+  application:
+    name: VERSION-TRACKING-SERVICE
+  datasource:
+    url: jdbc:mysql://localhost:3306/versiondb
+    username: root
+    password: 1234554321
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: always
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      selection-service:
+        sliding-window-type: COUNT_BASED
+        sliding-window-size: 3
+        failure-rate-threshold: 50
+        minimum-number-of-calls: 5
+        automatic-transition-from-open-to-half-open-enabled: true
+        permitted-number-of-calls-in-half-open-state: 2
